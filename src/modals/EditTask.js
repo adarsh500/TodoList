@@ -1,10 +1,15 @@
-import React from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 
-const CreateTask = ({ show, hide, save }) => {
+const EditTaskPopup = ({ show, hide, updateTask, taskObj }) => {
   const [task, setTask] = useState("");
   const [description, setDescription] = useState("");
+    
+  useEffect(() => {
+      setTask(taskObj.Name);
+      setDescription(taskObj.Description);
+  }, [])
+    
 
   const handleChange = (e) => {
     const name = e.target.name;
@@ -20,21 +25,18 @@ const CreateTask = ({ show, hide, save }) => {
     }
   };
 
-  const handleSave = () => {
-    if (task && description) {
-      let taskObj = {};
-      taskObj["Name"] = task;
-      taskObj["Description"] = description;
-      save(taskObj);
-      setTask("");
-      setDescription("");
-    }
+  const handleUpdate = (e) => {
+    e.preventDefault();
+    let tempObj = {};
+    tempObj['Name'] = task;
+    tempObj['Description'] = description;
+    updateTask(tempObj)
   };
 
   return (
     <Modal show={show} onHide={hide} centered>
       <Modal.Header closeButton>
-        <Modal.Title>Create Task</Modal.Title>
+        <Modal.Title>Update Task</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
@@ -48,7 +50,6 @@ const CreateTask = ({ show, hide, save }) => {
               name="taskName"
             ></input>
           </div>
-
           <br></br>
           <div className="form-group">
             <label>Description</label>
@@ -66,7 +67,7 @@ const CreateTask = ({ show, hide, save }) => {
         <Button variant="secondary" onClick={hide}>
           Close
         </Button>
-        <Button variant="primary" onClick={handleSave}>
+        <Button variant="primary" onClick={handleUpdate}>
           Save Changes
         </Button>
       </Modal.Footer>
@@ -74,4 +75,4 @@ const CreateTask = ({ show, hide, save }) => {
   );
 };
 
-export default CreateTask;
+export default EditTaskPopup;
